@@ -11,6 +11,8 @@
 	// @ts-expect-error d3 declarations are not installed in this project.
 	import * as d3 from 'd3';
 
+	import { fade } from 'svelte/transition';
+
 	import { Tween } from 'svelte/motion';
 	import { cubicOut } from 'svelte/easing';
 
@@ -86,7 +88,7 @@
 	let lineVisible = $derived(tPos.current >= min_scale && tPos.current <= max_scale);
 
 	let lineXcrit = $derived(xScale(tPosCrit.current));
-	// let lineVisible = $derived(tPos.current >= min_scale && tPos.current <= max_scale);
+	let lineVisibleCrit = $derived(tPosCrit.current >= min_scale && tPosCrit.current <= max_scale);
 
 	// Compute gradient stop percentages based on animated tPos.current
 	// Creates a narrow yellow band (1% width total, ±0.5% around x_pos)
@@ -142,11 +144,6 @@
 		ry={borderRadius}
 	/>
 
-	<text class="wq-props" x={lineXcrit} y={-8} font-size={16} fill="white" text-anchor="middle">
-		<!-- {x_pos.toFixed(1)} µg/L 👍 👎 -->
-		<tspan fill="white">estimate</tspan>: {critUianPos.toFixed(1)} µg/L
-	</text>
-
 	<text
 		class="wq-props"
 		x={lineX}
@@ -168,6 +165,15 @@
 			stroke={line_color}
 			stroke-width={line_width}
 		/>
+	{/if}
+
+	<!-- If estimate UIA-N is NOT off the rectangle, then show it -->
+	{#if lineVisibleCrit}
+		<text class="wq-props" x={lineXcrit} y={-8} font-size={16} fill="white" text-anchor="middle">
+			<!-- {x_pos.toFixed(1)} µg/L 👍 👎 -->
+			<tspan fill="white">estimate</tspan>: {critUianPos.toFixed(1)} µg/L
+		</text>
+
 		<line
 			x1={lineXcrit}
 			x2={lineXcrit}
@@ -177,6 +183,17 @@
 			stroke-width={2}
 			stroke-dasharray="5 5"
 		/>
+	{:else}
+		<text in:fade={{ duration: 350 }}
+			// class="wq-props"
+			x={xScale(115)}
+			y={height / 2}
+			font-size={20}
+			fill="red"
+			text-anchor="middle"
+		>
+			<tspan fill="white">est</tspan>: {critUianPos.toFixed(1)} µg/L
+		</text>
 	{/if}
 
 	<!-- Axis along the bottom edge of the rectangle -->
