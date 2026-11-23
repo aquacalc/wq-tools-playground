@@ -10,6 +10,7 @@
 	import Rect from '#lib/uian/Rect.svelte';
 
 	import SliderText from '#lib/SliderText.svelte';
+	import Summary from '#lib/Summary.svelte';
 
 	let posto = $derived(
 		(1000 *
@@ -83,6 +84,11 @@
 			options={['10', '15', '25', '30']}
 		/>
 	</div>
+
+    <hr />
+
+    <Summary />
+    
 </section>
 
 <style>
