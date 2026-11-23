@@ -4,19 +4,12 @@
 	import { phStore } from '#lib/stores/PhStore.svelte.js';
 	import { salStore } from '#lib/stores/SalStore.svelte.js';
 
-	import {
-		calcRho,
-		percentNh3ForTemp
-		// critPhFreeForTanMillero,
-		// phFreeToPhNbs,
-	} from '#lib/wq-brains/CarbCalcFunctions.js';
+	import { percentNh3ForTemp } from '#lib/wq-brains/CarbCalcFunctions.js';
 
 	// @ts-expect-error Svelte's generated declaration uses an arbitrary extension.
 	import Rect from '#lib/uian/Rect.svelte';
 
 	import SliderText from '#lib/SliderText.svelte';
-
-	let dummyRho = $derived(calcRho(tempStore.value + 273.15, salStore.value).toFixed(2));
 
 	let posto = $derived(
 		(1000 *
@@ -29,18 +22,17 @@
 </script>
 
 <div class="text-white-700 mt-6 mb-8 flex flex-col items-center text-2xl">
-	<h1>Un-ionized Ammonia (µg/L) {posto.toFixed(1)}</h1>
+	<h1>Un-ionized Ammonia (µg/L)</h1>
 </div>
 
 <section class="flex flex-col items-center">
-	<Rect x_pos={uianThreshhold} />
+	<Rect x_pos={uianThreshhold} critUianPos={posto} />
 
-	<label class="range-input-label w-[500px]" for="uian" style="text-align: left">
+	<label class="range-input-label mt-4 w-[500px]" for="uian" style="text-align: left">
 		<input
 			id="uian"
 			type="range"
 			class="w-full cursor-pointer"
-			//oninput={(e) => tempAndSal.tempC.set(+e.target.value)}
 			bind:value={uianThreshhold}
 			min="0"
 			max="50"

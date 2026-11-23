@@ -23,8 +23,9 @@
 		max_scale = 50,
 		steps = 2,
 		x_pos = 12.5,
-		line_color = 'white',
-		line_width = 2
+		line_color = 'yellow',
+		line_width = 5,
+		critUianPos = 12.5
 	}: {
 		width?: number;
 		height?: number;
@@ -36,6 +37,7 @@
 		x_pos?: number;
 		line_color?: string;
 		line_width?: number;
+		critUianPos: number;
 	} = $props();
 
 	const axisHeight = 30; // room below the rectangle for tick marks and labels
@@ -67,21 +69,30 @@
 			: []
 	);
 
-	const tPos = new Tween(x_pos, { duration: 750, easing: cubicOut });
+	const tPos = new Tween(0, { duration: 750, easing: cubicOut });
 
 	$effect(() => {
 		if (Number.isFinite(x_pos)) tPos.target = x_pos;
+	});
+
+	const tPosCrit = new Tween(12.5, { duration: 750, easing: cubicOut });
+
+	$effect(() => {
+		if (Number.isFinite(critUianPos)) tPosCrit.target = critUianPos;
 	});
 
 	// Pixel position of the vertical line, and whether it is currently inside the scale
 	let lineX = $derived(xScale(tPos.current));
 	let lineVisible = $derived(tPos.current >= min_scale && tPos.current <= max_scale);
 
+	let lineXcrit = $derived(xScale(tPosCrit.current));
+	// let lineVisible = $derived(tPos.current >= min_scale && tPos.current <= max_scale);
+
 	// Compute gradient stop percentages based on animated tPos.current
 	// Creates a narrow yellow band (1% width total, ±0.5% around x_pos)
 	let gradientStops = $derived.by(() => {
 		const domainWidth = max_scale - min_scale;
-		if (domainWidth === 0) return { yellowStart: '49.5%', yellowEnd: '50.5%' };
+		if (domainWidth === 0) return { yellowStart: '50%', yellowEnd: '50%' };
 
 		const currentFraction = (tPos.current - min_scale) / domainWidth;
 		const centerPercent = Math.max(0, Math.min(100, currentFraction * 100));
@@ -131,24 +142,41 @@
 		ry={borderRadius}
 	/>
 
-	<text class="wq-props" x={lineX} y={-8} font-size={16} fill="white" text-anchor="middle">
+	<text class="wq-props" x={lineXcrit} y={-8} font-size={16} fill="white" text-anchor="middle">
 		<!-- {x_pos.toFixed(1)} µg/L 👍 👎 -->
-		{x_pos.toFixed(1)} µg/L
+		<tspan fill="white">estimate</tspan>: {critUianPos.toFixed(1)} µg/L
 	</text>
 
 	<text
 		class="wq-props"
 		x={lineX}
-		y={height * 2}
+		y={height * 1.55}
 		font-size={16}
 		fill="#FFED29"
 		text-anchor="middle"
 	>
-		{x_pos.toFixed(1)} µg/L
+		critical: {x_pos.toFixed(1)} µg/L
+		<!-- <tspan fill="#FF2400">critical</tspan>: {x_pos.toFixed(1)} µg/L -->
 	</text>
 
 	{#if lineVisible}
-		<line x1={lineX} x2={lineX} y1={height} y2="0" stroke={line_color} stroke-width={line_width} />
+		<line
+			x1={lineX}
+			x2={lineX}
+			y1={height + 5}
+			y2="0"
+			stroke={line_color}
+			stroke-width={line_width}
+		/>
+		<line
+			x1={lineXcrit}
+			x2={lineXcrit}
+			y1={height}
+			y2="-5"
+			stroke="white"
+			stroke-width={2}
+			stroke-dasharray="5 5"
+		/>
 	{/if}
 
 	<!-- Axis along the bottom edge of the rectangle -->
