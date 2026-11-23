@@ -10,7 +10,7 @@
 	let uianThreshhold = $state(12.5);
 </script>
 
-<div class="mb-4 mt-6 flex flex-col items-center text-2xl text-white-700">
+<div class="mb-8 mt-6 flex flex-col items-center text-2xl text-white-700">
 	<h1>Un-ionized Ammonia (µg/L)</h1>
 </div>
 
@@ -40,7 +40,7 @@
 
 	<div class="grid mt-6">
 		<SliderText
-			label="TA-N"
+			label="TA-N (mg/L)"
 			id="tan"
 			store={tanStore}
 			max_scale={3}
@@ -48,7 +48,7 @@
 			options={['0.5', '1', '1.5', '2.5']}
 		/>
 		<SliderText
-			label="pH"
+			label="pH (NBS scale)"
 			id="ph"
 			store={phStore}
 			min_scale={6}
@@ -57,7 +57,7 @@
 			options={['6.5', '7', '7.5', '8']}
 		/>
 		<SliderText
-			label="Temperature"
+			label="Temperature (ºC)"
 			id="temp"
 			store={tempStore}
 			min_scale={15}
@@ -65,7 +65,7 @@
 			options={['20', '25', '30', '35']}
 		/>
 		<SliderText
-			label="Salinity"
+			label="Salinity (‰)"
 			id="sal"
 			store={salStore}
 			min_scale={0}
@@ -80,7 +80,7 @@
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 1rem;
+		gap: 2rem;
 	}
 
 	/* Each cell: top row spans the cell, bottom row is 1fr + 2fr */

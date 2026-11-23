@@ -17,13 +17,13 @@
 	let {
 		width = 500,
 		height = 70,
-		color = 'lightblue',
+		color = 'white', // fallback / unused when gradient is active
 		borderRadius = 0,
 		min_scale = 0,
 		max_scale = 50,
 		steps = 2,
 		x_pos = 12.5,
-		line_color = 'red',
+		line_color = 'white',
 		line_width = 2
 	}: {
 		width?: number;
@@ -47,9 +47,9 @@
 			d3 as unknown as {
 				color: (value: string) => { darker: (amount?: number) => { toString(): string } } | null;
 			}
-		).color(color)
+		).color('#22c55e')
 	);
-	let strokeColor = $derived(baseColor ? baseColor.darker(0.5).toString() : '#1e40af');
+	let strokeColor = $derived(baseColor ? baseColor.darker(0.5).toString() : '#15803d');
 
 	// Svelte renders the axis as markup; scale and tick values are computed locally.
 	let xScale: (value: number) => number = $derived((value: number) => {
@@ -67,27 +67,6 @@
 			: []
 	);
 
-	// Pixel position of the vertical line, and whether it falls inside the scale
-	// let lineX = $derived(xScale(x_pos));
-	// let lineVisible = $derived(x_pos >= min_scale && x_pos <= max_scale);
-
-	let defaultToxicLine = $derived(xScale(12.5));
-
-	// -------------------- //
-
-	// Smoothly animate the line. The tween runs in scale units (not pixels), so resizing the
-	// component or changing min_scale / max_scale repositions the line at once instead of
-	// animating, and only a change to x_pos animates.
-
-	// svelte-ignore state_referenced_locally
-
-	// How it works: new Tween(x_pos, …) starts the line at the initial x_pos, so it doesn’t animate in from 0 on mount. The $effect runs whenever the prop changes and sets tPos.target, and tPos.current animates toward it over 750 ms. This avoids Tween.of, which gave you trouble earlier.
-	// Warning comment: the svelte-ignore comment silences Svelte’s “only captures the initial value” warning, which is intended here because the initial value is what we want. The effect handles every later change.
-	// NaN guard: the Number.isFinite check means a non-numeric x_pos is ignored and the line stays where it is. This avoids the “Cannot interpolate values of different type” error you hit before.
-	// Visibility: lineVisible now follows the animated value, so a line moving out of range slides to the edge and disappears there. If you’d rather it vanish as soon as the target is out of range, use x_pos in that check instead of tPos.current.
-	// Static line: the white dashed 12.5 line doesn’t animate. Its position changes immediately if width or the scale changes.
-	// Changing the animation: the duration and easing options are the only things to edit.
-
 	const tPos = new Tween(x_pos, { duration: 750, easing: cubicOut });
 
 	$effect(() => {
@@ -97,6 +76,27 @@
 	// Pixel position of the vertical line, and whether it is currently inside the scale
 	let lineX = $derived(xScale(tPos.current));
 	let lineVisible = $derived(tPos.current >= min_scale && tPos.current <= max_scale);
+
+	// Compute gradient stop percentages based on animated tPos.current
+	// Creates a narrow yellow band (e.g., 4% width total, ±2% around x_pos)
+	let gradientStops = $derived.by(() => {
+		const domainWidth = max_scale - min_scale;
+		if (domainWidth === 0) return { yellowStart: '49%', yellowEnd: '51%' };
+
+		const currentFraction = (tPos.current - min_scale) / domainWidth;
+		const centerPercent = Math.max(0, Math.min(100, currentFraction * 100));
+
+		const halfBandWidth = 2; // Adjust this to make the yellow band wider or narrower
+		const yellowStart = Math.max(0, centerPercent - halfBandWidth);
+		const yellowEnd = Math.min(100, centerPercent + halfBandWidth);
+
+		return {
+			yellowStart: `${yellowStart.toFixed(2)}%`,
+			yellowEnd: `${yellowEnd.toFixed(2)}%`
+		};
+	});
+
+	const gradientId = `linear-gradient-${Math.random().toString(36).substring(2, 9)}`;
 </script>
 
 <svg
@@ -105,33 +105,31 @@
 	role="img"
 	aria-label="Rectangle with a horizontal axis from {min_scale} to {max_scale} and a vertical line at {x_pos}"
 >
+	<defs>
+		<linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+			<stop offset="0%" stop-color="#22c55e" />
+			<stop offset={gradientStops.yellowStart} stop-color="#22c55e" />
+			<stop offset={gradientStops.yellowStart} stop-color="#eab308" />
+			<stop offset={gradientStops.yellowEnd} stop-color="#eab308" />
+			<stop offset={gradientStops.yellowEnd} stop-color="#ef4444" />
+			<stop offset="100%" stop-color="#ef4444" />
+		</linearGradient>
+	</defs>
+
 	<rect
 		{width}
 		{height}
-		fill={color}
+		fill="url(#{gradientId})"
 		stroke={strokeColor}
 		stroke-width="2"
 		rx={borderRadius}
 		ry={borderRadius}
 	/>
 
-	<text class="wq-props" x={lineX} y={-3} font-size={10} text-anchor="middle">
+	<text class="wq-props" x={lineX} y={-8} font-size={16} fill="white" text-anchor="middle">
 		{x_pos.toFixed(1)} µg/L
 	</text>
 
-	<!-- 12.5-µg/L line -->
-	<line
-		x1={defaultToxicLine}
-		x2={defaultToxicLine}
-		y1={height}
-		y2="0"
-		stroke="white"
-		stroke-width={line_width}
-		stroke-dasharray="5 5"
-		stroke-opacity="0.75"
-	/>
-
-	<!-- Vertical line from the base of the rectangle up to its top, at x_pos on the scale -->
 	{#if lineVisible}
 		<line x1={lineX} x2={lineX} y1={height} y2="0" stroke={line_color} stroke-width={line_width} />
 	{/if}

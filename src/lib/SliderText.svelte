@@ -23,9 +23,6 @@
 		options?: string[];
 		store: { value: number; set: (value: number) => void };
 		// store: { value: { current: number }; set: (value: number) => void };
-		// x_pos?: number;
-		// line_color?: string;
-		// line_width?: number;
 	} = $props();
 </script>
 
@@ -36,13 +33,6 @@
 </section>
 
 <style>
-	/* Outer layout: two columns; four cells wrap into two rows */
-	/* .grid {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 1rem;
-	} */
-
 	/* Each cell: top row spans the cell, bottom row is 1fr + 2fr */
 	.cell {
 		display: grid;
@@ -52,7 +42,7 @@
 		border: 1px solid #ccc;
 		border-radius: 0.5rem;
 		align-items: center;
-        background-color: #2f3c79;
+		background-color: #2f3c79;
 	}
 
 	.cell-top {
