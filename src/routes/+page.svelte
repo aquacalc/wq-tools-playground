@@ -63,7 +63,7 @@
 			id="ph"
 			store={phStore}
 			min_scale={6}
-			max_scale={9}
+			max_scale={8}
 			step={0.01}
 			options={['6.5', '7', '7.5', '8']}
 		/>
@@ -88,7 +88,7 @@
     <hr />
 
     <Summary />
-    
+
 </section>
 
 <style>

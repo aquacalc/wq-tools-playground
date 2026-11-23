@@ -20,8 +20,8 @@
 		// color = 'white', // fallback / unused when gradient is active
 		borderRadius = 0,
 		min_scale = 0,
-		max_scale = 50,
-		steps = 2,
+		max_scale = 100,
+		steps = 5,
 		x_pos = 12.5,
 		line_color = 'yellow',
 		line_width = 5,
