@@ -17,7 +17,7 @@
 	let {
 		width = 500,
 		height = 70,
-		color = 'white', // fallback / unused when gradient is active
+		// color = 'white', // fallback / unused when gradient is active
 		borderRadius = 0,
 		min_scale = 0,
 		max_scale = 50,
@@ -28,7 +28,7 @@
 	}: {
 		width?: number;
 		height?: number;
-		color?: string;
+		// color?: string;
 		borderRadius?: number;
 		min_scale?: number;
 		max_scale?: number;
@@ -126,12 +126,24 @@
 		{height}
 		fill="url(#{gradientId})"
 		stroke={strokeColor}
-		stroke-width="2"
+		stroke-width="1"
 		rx={borderRadius}
 		ry={borderRadius}
 	/>
 
 	<text class="wq-props" x={lineX} y={-8} font-size={16} fill="white" text-anchor="middle">
+		<!-- {x_pos.toFixed(1)} µg/L 👍 👎 -->
+		{x_pos.toFixed(1)} µg/L
+	</text>
+
+	<text
+		class="wq-props"
+		x={lineX}
+		y={height * 2}
+		font-size={16}
+		fill="#FFED29"
+		text-anchor="middle"
+	>
 		{x_pos.toFixed(1)} µg/L
 	</text>
 

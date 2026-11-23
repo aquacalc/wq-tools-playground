@@ -4,14 +4,32 @@
 	import { phStore } from '#lib/stores/PhStore.svelte.js';
 	import { salStore } from '#lib/stores/SalStore.svelte.js';
 
+	import {
+		calcRho,
+		percentNh3ForTemp
+		// critPhFreeForTanMillero,
+		// phFreeToPhNbs,
+	} from '#lib/wq-brains/CarbCalcFunctions.js';
+
+	// @ts-expect-error Svelte's generated declaration uses an arbitrary extension.
 	import Rect from '#lib/uian/Rect.svelte';
+
 	import SliderText from '#lib/SliderText.svelte';
+
+	let dummyRho = $derived(calcRho(tempStore.value + 273.15, salStore.value).toFixed(2));
+
+	let posto = $derived(
+		(1000 *
+			tanStore.value *
+			percentNh3ForTemp(tempStore.value + 273.15, salStore.value, phStore.value)) /
+			100
+	);
 
 	let uianThreshhold = $state(12.5);
 </script>
 
-<div class="mb-8 mt-6 flex flex-col items-center text-2xl text-white-700">
-	<h1>Un-ionized Ammonia (µg/L)</h1>
+<div class="text-white-700 mt-6 mb-8 flex flex-col items-center text-2xl">
+	<h1>Un-ionized Ammonia (µg/L) {posto.toFixed(1)}</h1>
 </div>
 
 <section class="flex flex-col items-center">
@@ -38,7 +56,7 @@
 
 	<hr />
 
-	<div class="grid mt-6">
+	<div class="mt-10 grid">
 		<SliderText
 			label="TA-N (mg/L)"
 			id="tan"
