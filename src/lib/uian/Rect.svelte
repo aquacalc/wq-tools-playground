@@ -78,15 +78,15 @@
 	let lineVisible = $derived(tPos.current >= min_scale && tPos.current <= max_scale);
 
 	// Compute gradient stop percentages based on animated tPos.current
-	// Creates a narrow yellow band (e.g., 4% width total, ±2% around x_pos)
+	// Creates a narrow yellow band (1% width total, ±0.5% around x_pos)
 	let gradientStops = $derived.by(() => {
 		const domainWidth = max_scale - min_scale;
-		if (domainWidth === 0) return { yellowStart: '49%', yellowEnd: '51%' };
+		if (domainWidth === 0) return { yellowStart: '49.5%', yellowEnd: '50.5%' };
 
 		const currentFraction = (tPos.current - min_scale) / domainWidth;
 		const centerPercent = Math.max(0, Math.min(100, currentFraction * 100));
 
-		const halfBandWidth = 2; // Adjust this to make the yellow band wider or narrower
+		const halfBandWidth = 0.5; // Narrower yellow band (1% total width)
 		const yellowStart = Math.max(0, centerPercent - halfBandWidth);
 		const yellowEnd = Math.min(100, centerPercent + halfBandWidth);
 
@@ -107,12 +107,17 @@
 >
 	<defs>
 		<linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-			<stop offset="0%" stop-color="#22c55e" />
-			<stop offset={gradientStops.yellowStart} stop-color="#22c55e" />
+			<!-- Deep green to light green -->
+			<stop offset="0%" stop-color="#14532d" />
+			<stop offset={gradientStops.yellowStart} stop-color="#86efac" />
+
+			<!-- Narrow yellow band -->
 			<stop offset={gradientStops.yellowStart} stop-color="#eab308" />
 			<stop offset={gradientStops.yellowEnd} stop-color="#eab308" />
-			<stop offset={gradientStops.yellowEnd} stop-color="#ef4444" />
-			<stop offset="100%" stop-color="#ef4444" />
+
+			<!-- Light red to deep red -->
+			<stop offset={gradientStops.yellowEnd} stop-color="#fca5a5" />
+			<stop offset="100%" stop-color="#7f1d1d" />
 		</linearGradient>
 	</defs>
 
