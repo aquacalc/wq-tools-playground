@@ -85,10 +85,9 @@
 		/>
 	</div>
 
-    <hr />
+	<hr />
 
-    <Summary />
-
+	<Summary temp={tempStore.value} sal={salStore.value} ph={phStore.value} tan={tanStore.value} />
 </section>
 
 <style>
@@ -113,6 +112,11 @@
 	/* .cell-top {
 		grid-column: 1 / -1;
 	} */
+
+	input[type='range'] {
+		accent-color: #FFED29;
+        opacity: 0.85;
+	}
 
 	/* Breakpoint: below 40rem the outer grid collapses to a single column 
     of four cells. The 1:2 split inside each cell stays. If that is too tight 
