@@ -22,7 +22,7 @@
 		// color = 'white', // fallback / unused when gradient is active
 		borderRadius = 0,
 		min_scale = 0,
-		max_scale = 100,
+		max_scale = 50,
 		steps = 5,
 		x_pos = 12.5,
 		line_color = 'yellow',
@@ -186,7 +186,8 @@
 	{:else}
 		<text in:fade={{ duration: 350 }}
 			// class="wq-props"
-			x={xScale(115)}
+			// x={xScale(115)}
+			x={xScale(57.5)}
 			y={height / 2}
 			font-size={20}
 			fill="red"
