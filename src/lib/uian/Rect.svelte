@@ -171,7 +171,7 @@
 	{#if lineVisibleCrit}
 		<text class="wq-props" x={lineXcrit} y={-8} font-size={16} fill="white" text-anchor="middle">
 			<!-- {x_pos.toFixed(1)} µg/L 👍 👎 -->
-			<tspan fill="white">estimate</tspan>: {critUianPos.toFixed(1)} µg/L
+			<tspan fill="white">estimate</tspan>: {critUianPos.toFixed(2)} µg/L
 		</text>
 
 		<line

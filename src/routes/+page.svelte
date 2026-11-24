@@ -4,7 +4,12 @@
 	import { phStore } from '#lib/stores/PhStore.svelte.js';
 	import { salStore } from '#lib/stores/SalStore.svelte.js';
 
-	import { percentNh3ForTemp } from '#lib/wq-brains/CarbCalcFunctions.js';
+	import {
+		percentNh3ForTemp,
+		critPhFreeForTanMillero,
+		phFreeToPhNbs,
+		phNbsToPhFree
+	} from '#lib/wq-brains/CarbCalcFunctions.js';
 
 	// @ts-expect-error Svelte's generated declaration uses an arbitrary extension.
 	import Rect from '#lib/uian/Rect.svelte';
@@ -12,12 +17,54 @@
 	import SliderText from '#lib/SliderText.svelte';
 	import Summary from '#lib/Summary.svelte';
 
-	let posto = $derived(
-		(1000 *
-			tanStore.value *
-			percentNh3ForTemp(tempStore.value + 273.15, salStore.value, phStore.value)) /
-			100
-	);
+	let posto = $derived.by(() => {
+		// ∆ pH NBS to Free scale
+		let phFree = phNbsToPhFree(
+			phStore.value,
+			salStore.value,
+			tempStore.value + 273.15,
+			0
+		) as number;
+
+		let uian =
+			(1000 *
+				tanStore.value *
+				percentNh3ForTemp(tempStore.value + 273.15, salStore.value, phFree)) /
+			100;
+
+		return {
+			phFree,
+			uian
+		};
+	});
+
+	// Use $derived.by() for multi-step calculations
+	let critPh = $derived.by(() => {
+		let critPhFree = critPhFreeForTanMillero(
+			tanStore.value * 1000, // [NB] mg/L -> µg/L
+			12.5,
+			// this.uianMugL.current,
+			tempStore.value + 273.15,
+			salStore.value
+		);
+
+		// // [HACK] Like in UiaContent.js, critPh can NaN or +/-Inf
+		// //        if TA-N is too low to produce the critical UIA-N
+		critPhFree = isNaN(critPhFree) ? 12.0 : critPhFree;
+		critPhFree = critPhFree === Infinity ? 12.0 : critPhFree;
+		critPhFree = critPhFree === -Infinity ? 5.0 : critPhFree;
+
+		// ∆ critPhFree to critPhNbs
+		let critPhNbs = phFreeToPhNbs(critPhFree, salStore.value, tempStore.value + 273.15, 0);
+
+		console.log(`critPhNbs: ${critPhNbs.toFixed(2)} (${phStore.value})`);
+
+		return {
+			critPhNbs,
+			critPhFree,
+			msg: 'Proba!'
+		};
+	});
 
 	let uianThreshhold = $state(12.5);
 </script>
@@ -27,7 +74,7 @@
 </div>
 
 <section class="flex flex-col items-center">
-	<Rect x_pos={uianThreshhold} critUianPos={posto} />
+	<Rect x_pos={uianThreshhold} critUianPos={posto.uian} />
 
 	<label class="range-input-label mt-4 w-[500px]" for="uian" style="text-align: left">
 		<input
@@ -87,7 +134,14 @@
 
 	<hr />
 
-	<Summary temp={tempStore.value} sal={salStore.value} ph={phStore.value} tan={tanStore.value} />
+	<Summary
+		temp={tempStore.value}
+		sal={salStore.value}
+		ph={phStore.value}
+		tan={tanStore.value}
+		critPh={critPh.critPhNbs}
+		uian={posto.uian}
+	/>
 </section>
 
 <style>
@@ -114,8 +168,8 @@
 	} */
 
 	input[type='range'] {
-		accent-color: #FFED29;
-        opacity: 0.85;
+		accent-color: #ffed29;
+		opacity: 0.85;
 	}
 
 	/* Breakpoint: below 40rem the outer grid collapses to a single column 

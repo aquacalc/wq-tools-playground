@@ -3,12 +3,16 @@
 		temp = 28,
 		sal = 34.5,
 		ph = 7.5,
-		tan = 0.15
+		tan = 0.15,
+		critPh = 7,
+        uian
 	}: {
 		temp?: number;
 		sal?: number;
 		ph?: number;
 		tan?: number;
+		critPh?: number;
+        uian?: number
 	} = $props();
 </script>
 
@@ -25,4 +29,7 @@
 	<h1>{sal.toFixed(1)}‰</h1>
 	<h1>{ph.toFixed(2)} (NBS Scale)</h1>
 	<h1>{tan.toFixed(2)} mg/L</h1>
+
+	<h1 class="text-red-500">{critPh.toFixed(2)}</h1>
+    <h2>{uian?.toFixed(2)}</h2>
 </div>
