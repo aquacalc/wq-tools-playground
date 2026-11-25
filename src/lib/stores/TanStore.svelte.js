@@ -3,14 +3,17 @@
 // Safe Parsing: Validates parsed storage items with isNaN() to prevent NaN bugs if localStorage data becomes corrupted or malformed.
 // Constants Extraction: Moved configuration strings and fallback values into clean module-scoped constants (STORAGE_KEY, DEFAULT_VALUE).
 
-import { cubicOut } from 'svelte/easing';
-import { Tween } from 'svelte/motion';
+// import { cubicOut } from 'svelte/easing';
+// import { Tween } from 'svelte/motion';
 
 const STORAGE_KEY = 'tan_store_value';
 const DEFAULT_VALUE = 0.15;
 
 export class TanStore {
-	#tween;
+	// #tween;
+
+	// Initialize with the $state rune
+	myWqValue = $state(0);
 
 	constructor() {
 		let initialVal = DEFAULT_VALUE;
@@ -27,7 +30,7 @@ export class TanStore {
 		}
 
 		// Initialize the tween with the stored value or fallback
-		this.#tween = new Tween(initialVal, { duration: 750, easing: cubicOut });
+		// this.#tween = new Tween(initialVal, { duration: 750, easing: cubicOut });
 	}
 
 	/**
@@ -38,13 +41,58 @@ export class TanStore {
 		if (typeof window !== 'undefined') {
 			localStorage.setItem(STORAGE_KEY, val.toString());
 		}
-		void this.#tween.set(val);
+		// void this.#tween.set(val);
+		this.myWqValue = val;
 	}
 
 	/** The current (animated) TAN value, in mg/L. Reactive: reads update as the tween runs. */
 	get value() {
-		return Number(this.#tween.current.toFixed(2));
+		// return Number(this.#tween.current.toFixed(2));
+		return this.myWqValue;
 	}
 }
 
 export const tanStore = new TanStore();
+
+// const STORAGE_KEY = 'tan_store_value';
+// const DEFAULT_VALUE = 0.15;
+
+// export class TanStore {
+// 	#value = $state(DEFAULT_VALUE);
+
+// 	constructor() {
+// 		let initialVal = DEFAULT_VALUE;
+
+// 		// Ensure safe execution during Server-Side Rendering (SSR) like SvelteKit
+// 		if (typeof window !== 'undefined') {
+// 			const stored = localStorage.getItem(STORAGE_KEY);
+// 			if (stored !== null) {
+// 				const parsed = parseFloat(stored);
+// 				if (!isNaN(parsed)) {
+// 					initialVal = parsed;
+// 				}
+// 			}
+// 		}
+
+// 		// Initialize with the stored value or fallback directly
+// 		this.#value = initialVal;
+// 	}
+
+// 	/**
+// 	 * Sets a new TAN value and persists it to localStorage instantly.
+// 	 * @param {number} val
+// 	 */
+// 	set(val) {
+// 		if (typeof window !== 'undefined') {
+// 			localStorage.setItem(STORAGE_KEY, val.toString());
+// 		}
+// 		this.#value = val;
+// 	}
+
+// 	/** The current TAN value, in mg/L. Reactive via Svelte 5 runes. */
+// 	get value() {
+// 		return Number(this.#value.toFixed(2));
+// 	}
+// }
+
+// export const tanStore = new TanStore();
