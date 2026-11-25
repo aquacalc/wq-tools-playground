@@ -42,8 +42,7 @@
 	let critPh = $derived.by(() => {
 		let critPhFree = critPhFreeForTanMillero(
 			tanStore.value * 1000, // [NB] mg/L -> µg/L
-			12.5,
-			// this.uianMugL.current,
+			uianThreshhold,
 			tempStore.value + 273.15,
 			salStore.value
 		);
