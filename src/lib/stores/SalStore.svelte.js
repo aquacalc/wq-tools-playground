@@ -1,11 +1,8 @@
-import { cubicOut } from 'svelte/easing';
-import { Tween } from 'svelte/motion';
-
 const STORAGE_KEY = 'sal_store_value';
 const DEFAULT_VALUE = 34.5;
 
 export class SalStore {
-	#tween;
+	myWqValue = $state(DEFAULT_VALUE);
 
 	constructor() {
 		let initialVal = DEFAULT_VALUE;
@@ -20,9 +17,6 @@ export class SalStore {
 				}
 			}
 		}
-
-		// Initialize the tween with the stored value or fallback
-		this.#tween = new Tween(initialVal, { duration: 750, easing: cubicOut });
 	}
 
 	/**
@@ -33,11 +27,11 @@ export class SalStore {
 		if (typeof window !== 'undefined') {
 			localStorage.setItem(STORAGE_KEY, val.toString());
 		}
-		void this.#tween.set(val);
+		this.myWqValue = val;
 	}
 
 	get value() {
-		return Number(this.#tween.current.toFixed(1));
+		return this.myWqValue;
 	}
 }
 

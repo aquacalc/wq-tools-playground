@@ -17,10 +17,6 @@
 	import SliderText from '#lib/SliderText.svelte';
 	import Summary from '#lib/Summary.svelte';
 
-	import { dummyStore } from '#lib/stores/DummyStore.svelte.js';
-	import DummyText from '#lib/DummyText.svelte';
-	import DummySlider from '#lib/DummySlider.svelte';
-
 	let posto = $derived.by(() => {
 		// ∆ pH NBS to Free scale
 		let phFree = phNbsToPhFree(
@@ -97,8 +93,6 @@
 		</datalist>
 	</label>
 
-	<hr />
-
 	<div class="mt-10 grid">
 		<SliderText
 			label="TA-N (mg/L)"
@@ -135,27 +129,14 @@
 		/>
 	</div>
 
-	<hr class="mt-10" />
-	<DummyText id="dummy" store={dummyStore} max_scale={3} step={0.01} />
-
-	<DummySlider
-		id="dummy-slider"
-		store={dummyStore}
-		min_scale={0}
-		max_scale={40}
-		options={['10', '15', '25', '30']}
-	/>
-
-	Dummy: {dummyStore.value} - {dummyStore.yadda}
-
-	<!-- <Summary
+	<Summary
 		temp={tempStore.value}
 		sal={salStore.value}
 		ph={phStore.value}
 		tan={tanStore.value}
 		critPh={critPh.critPhNbs}
 		uian={posto.uian}
-	/> -->
+	/>
 </section>
 
 <style>
@@ -165,21 +146,6 @@
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 2rem;
 	}
-
-	/* Each cell: top row spans the cell, bottom row is 1fr + 2fr */
-	/* .cell {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-		gap: 0.5rem;
-		padding: 0.75rem;
-		border: 1px solid #ccc;
-		border-radius: 0.5rem;
-	} */
-
-	/* spans both columns */
-	/* .cell-top {
-		grid-column: 1 / -1;
-	} */
 
 	input[type='range'] {
 		accent-color: #ffed29;

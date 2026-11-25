@@ -13,7 +13,7 @@ export class TanStore {
 	// #tween;
 
 	// Initialize with the $state rune
-	myWqValue = $state(0);
+	myWqValue = $state(DEFAULT_VALUE);
 
 	constructor() {
 		let initialVal = DEFAULT_VALUE;

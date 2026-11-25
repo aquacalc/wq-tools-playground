@@ -3,14 +3,12 @@
 // Safe Parsing: Validates parsed storage items with isNaN() to prevent NaN bugs if localStorage data becomes corrupted or malformed.
 // Constants Extraction: Moved configuration strings and fallback values into clean module-scoped constants (STORAGE_KEY, DEFAULT_VALUE).
 
-import { cubicOut } from 'svelte/easing';
-import { Tween } from 'svelte/motion';
-
 const STORAGE_KEY = 'ph_store_value';
 const DEFAULT_VALUE = 7.5;
 
 export class PhStore {
-	#tween;
+	// Initialize with the $state rune
+	myWqValue = $state(DEFAULT_VALUE);
 
 	constructor() {
 		let initialVal = DEFAULT_VALUE;
@@ -25,9 +23,6 @@ export class PhStore {
 				}
 			}
 		}
-
-		// Initialize the tween with the stored value or fallback
-		this.#tween = new Tween(initialVal, { duration: 750, easing: cubicOut });
 	}
 
 	/**
@@ -38,11 +33,12 @@ export class PhStore {
 		if (typeof window !== 'undefined') {
 			localStorage.setItem(STORAGE_KEY, val.toString());
 		}
-		void this.#tween.set(val);
+
+		this.myWqValue = val;
 	}
 
 	get value() {
-		return Number(this.#tween.current.toFixed(2));
+		return this.myWqValue;
 	}
 }
 

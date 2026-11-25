@@ -1,11 +1,14 @@
-import { cubicOut } from 'svelte/easing';
-import { Tween } from 'svelte/motion';
+// import { cubicOut } from 'svelte/easing';
+// import { Tween } from 'svelte/motion';
 
 const STORAGE_KEY = 'temp_store_value';
 const DEFAULT_VALUE = 28;
 
 export class TempStore {
-	#tween;
+	// #tween;
+
+	// Initialize with the $state rune
+	myWqValue = $state(DEFAULT_VALUE);
 
 	constructor() {
 		let initialVal = DEFAULT_VALUE;
@@ -22,7 +25,7 @@ export class TempStore {
 		}
 
 		// Initialize the tween with the stored value or fallback
-		this.#tween = new Tween(initialVal, { duration: 750, easing: cubicOut });
+		// this.#tween = new Tween(initialVal, { duration: 750, easing: cubicOut });
 	}
 
 	/**
@@ -33,11 +36,13 @@ export class TempStore {
 		if (typeof window !== 'undefined') {
 			localStorage.setItem(STORAGE_KEY, val.toString());
 		}
-		void this.#tween.set(val);
+		// void this.#tween.set(val);
+		this.myWqValue = val;
 	}
 
 	get value() {
-		return Number(this.#tween.current.toFixed(1));
+		// return Number(this.#tween.current.toFixed(1));
+		return this.myWqValue;
 	}
 }
 
