@@ -17,6 +17,10 @@
 	import SliderText from '#lib/SliderText.svelte';
 	import Summary from '#lib/Summary.svelte';
 
+	import { dummyStore } from '#lib/stores/DummyStore.svelte.js';
+	import DummyText from '#lib/DummyText.svelte';
+	import DummySlider from '#lib/DummySlider.svelte';
+
 	let posto = $derived.by(() => {
 		// ∆ pH NBS to Free scale
 		let phFree = phNbsToPhFree(
@@ -131,16 +135,27 @@
 		/>
 	</div>
 
-	<hr />
+	<hr class="mt-10" />
+	<DummyText id="dummy" store={dummyStore} max_scale={3} step={0.01} />
 
-	<Summary
+	<DummySlider
+		id="dummy-slider"
+		store={dummyStore}
+		min_scale={0}
+		max_scale={40}
+		options={['10', '15', '25', '30']}
+	/>
+
+	Dummy: {dummyStore.value} - {dummyStore.yadda}
+
+	<!-- <Summary
 		temp={tempStore.value}
 		sal={salStore.value}
 		ph={phStore.value}
 		tan={tanStore.value}
 		critPh={critPh.critPhNbs}
 		uian={posto.uian}
-	/>
+	/> -->
 </section>
 
 <style>
