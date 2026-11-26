@@ -23,9 +23,8 @@ export class TempStore {
 				}
 			}
 		}
-
-		// Initialize the tween with the stored value or fallback
-		// this.#tween = new Tween(initialVal, { duration: 750, easing: cubicOut });
+		
+		this.myWqValue = initialVal;
 	}
 
 	/**
@@ -41,7 +40,6 @@ export class TempStore {
 	}
 
 	get value() {
-		// return Number(this.#tween.current.toFixed(1));
 		return this.myWqValue;
 	}
 }

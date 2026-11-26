@@ -29,6 +29,8 @@ export class TanStore {
 			}
 		}
 
+		this.myWqValue = initialVal;
+
 		// Initialize the tween with the stored value or fallback
 		// this.#tween = new Tween(initialVal, { duration: 750, easing: cubicOut });
 	}

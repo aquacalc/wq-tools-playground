@@ -17,6 +17,8 @@ export class SalStore {
 				}
 			}
 		}
+		
+		this.myWqValue = initialVal;
 	}
 
 	/**

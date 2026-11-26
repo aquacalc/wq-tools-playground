@@ -23,6 +23,8 @@ export class PhStore {
 				}
 			}
 		}
+		
+		this.myWqValue = initialVal;
 	}
 
 	/**

@@ -135,7 +135,7 @@
 		ph={phStore.value}
 		tan={tanStore.value}
 		critPh={critPh.critPhNbs}
-		uian={posto.uian}
+		uian={posto?.uian}
 	/>
 </section>
 
