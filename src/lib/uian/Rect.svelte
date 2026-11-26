@@ -169,9 +169,17 @@
 
 	<!-- If estimate UIA-N is NOT off the rectangle, then show it -->
 	{#if lineVisibleCrit}
-		<text class="wq-props" x={lineXcrit} y={-8} font-size={16} fill="white" text-anchor="middle">
-			<!-- {x_pos.toFixed(1)} µg/L 👍 👎 -->
-			<tspan fill="white">estimate</tspan>: {critUianPos.toFixed(2)} µg/L
+		<text
+			class="wq-props"
+			x={lineXcrit}
+			y={-8}
+			font-size={16}
+			fill={lineXcrit < lineX ? 'lightgreen' : 'red'}
+			text-anchor="middle"
+		>
+			<tspan fill={lineXcrit < lineX ? 'lightgreen' : 'red'}>estimate</tspan>: {critUianPos.toFixed(
+				2
+			)} µg/L
 		</text>
 
 		<line
@@ -179,12 +187,13 @@
 			x2={lineXcrit}
 			y1={height}
 			y2="-5"
-			stroke="white"
+			stroke={lineXcrit < lineX ? 'white' : 'white'}
 			stroke-width={2}
 			stroke-dasharray="5 5"
 		/>
 	{:else}
-		<text in:fade={{ duration: 350 }}
+		<text
+			in:fade={{ duration: 350 }}
 			// class="wq-props"
 			// x={xScale(115)}
 			x={xScale(57.5)}
