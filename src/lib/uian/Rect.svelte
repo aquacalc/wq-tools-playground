@@ -177,7 +177,7 @@
 			fill={lineXcrit < lineX ? 'lightgreen' : 'red'}
 			text-anchor="middle"
 		>
-			<tspan fill={lineXcrit < lineX ? 'lightgreen' : 'red'}>estimate</tspan>: {critUianPos.toFixed(
+			<tspan fill={lineXcrit < lineX ? 'lightgreen' : 'red'}>estimated</tspan>: {critUianPos.toFixed(
 				2
 			)} µg/L
 		</text>
