@@ -25,6 +25,19 @@
 		Reporting TAN alone without calculating NH₃ can be misleading.
 	</p>
 
+	<div class="flex w-full text-center">
+		<img src="/nh3_to_nh4+.png" class="mx-auto w-60 max-w-full" alt="" />
+	</div>
+
+	<div style="text-align: center; margin-top: 20px;">
+		<!-- <h2>VID VALUE: {value}</h2> -->
+		<video width="650" height="400px" controls controlsList="nodownload" poster="manim-poster.png">
+			<source src="/MembraneDiffusionEq6.mp4" type="video/mp4" />
+			<track kind="captions" src="" srclang="en" label="English captions" />
+			Your browser does not support the video tag.
+		</video>
+	</div>
+
 	<h1>{temp.toFixed(1)}º C</h1>
 	<h1>{sal.toFixed(1)}‰</h1>
 	<h1>{ph.toFixed(2)} (NBS Scale)</h1>
